@@ -6,7 +6,6 @@ use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
 use App\Http\Resources\AuthorsResource;
 use App\Models\Author;
-use Database\Seeders\AuthorSeeder;
 
 class AuthorsController extends Controller
 {
@@ -17,7 +16,7 @@ class AuthorsController extends Controller
      */
     public function index()
     {
-        //
+        return AuthorsResource::collection(Author::all());
     }
 
     /**
@@ -38,7 +37,9 @@ class AuthorsController extends Controller
      */
     public function store(StoreAuthorRequest $request)
     {
-        //
+        // $faker = \Faker\Factory::create(1);
+        $author = Author::create(['name' => $request->name]);
+        return new AuthorsResource($author);
     }
 
     /**
@@ -72,7 +73,11 @@ class AuthorsController extends Controller
      */
     public function update(UpdateAuthorRequest $request, Author $author)
     {
-        //
+        // $faker = \Faker\Factory::create(1);
+        $author->update([
+            'name' => $request->input('name'),
+        ]);
+        return new AuthorsResource($author);
     }
 
     /**
@@ -83,6 +88,7 @@ class AuthorsController extends Controller
      */
     public function destroy(Author $author)
     {
-        //
+        $author->delete();
+        return response(null, '204');
     }
 }
